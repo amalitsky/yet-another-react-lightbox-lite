@@ -3,14 +3,16 @@ import { useEffect, useRef } from "react";
 import ImageSlide from "./ImageSlide";
 import { useZoom, useZoomInternal } from "./Zoom";
 import { useLightboxContext } from "./LightboxContext";
-import { cssClass, isImageSlide, round } from "../utils";
+import { clsx, cssClass, isImageSlide, round } from "../utils";
 import { RenderSlideProps, SlideImage } from "../types";
+import { useController } from "./Controller";
 
 function CarouselSlide({ slide, rect, current }: Pick<RenderSlideProps, "slide" | "rect" | "current">) {
   const ref = useRef<HTMLDivElement | null>(null);
 
   const { zoom, offsetX, offsetY } = useZoom();
   const { styles, render: { slide: renderSlide, slideHeader, slideFooter } = {} } = useLightboxContext();
+  const { upcomingTransition } = useController();
 
   useEffect(() => {
     if (!current && ref.current?.contains(document.activeElement)) {
@@ -25,7 +27,10 @@ function CarouselSlide({ slide, rect, current }: Pick<RenderSlideProps, "slide" 
       ref={ref}
       role="group"
       aria-roledescription="slide"
-      className={cssClass("slide")}
+      className={clsx(
+        cssClass("slide"),
+        current && upcomingTransition && cssClass(`slide_navigation_${upcomingTransition}`),
+      )}
       hidden={!current}
       style={{
         transform:
