@@ -229,6 +229,9 @@ describe("Lightbox", () => {
     clickButtonNext();
     expectCurrentSlideToBe(1);
 
+    clickButtonPrev();
+    expectCurrentSlideToBe(0);
+
     // @ts-ignore
     document.startViewTransition = undefined;
   });

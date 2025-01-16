@@ -17,14 +17,16 @@ export function clsx(...classes: (string | boolean | undefined)[]) {
   return [...classes].filter(Boolean).join(" ");
 }
 
-export function transition(callback: Callback) {
+export function transition(callback: Callback): ViewTransition | undefined {
   if (document.startViewTransition) {
-    document.startViewTransition(() => {
+    return document.startViewTransition(() => {
       flushSync(callback);
     });
-  } else {
-    callback();
   }
+
+  callback();
+
+  return undefined;
 }
 
 export function translateLabel(labels: Labels | undefined, label: Label) {
