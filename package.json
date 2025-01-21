@@ -1,8 +1,8 @@
 {
-  "name": "yet-another-react-lightbox-lite",
+  "name": "@amlab/yet-another-react-lightbox-lite",
   "version": "0.0.0-semantic-release",
-  "description": "Lightweight React lightbox component",
-  "author": "Igor Danchenko",
+  "description": "Fork of igordanchenko/yet-another-react-lightbox-lite",
+  "author": "Igor Danchenko, Alex Malitsky",
   "license": "MIT",
   "type": "module",
   "module": "dist/index.js",
@@ -23,13 +23,13 @@
   "sideEffects": [
     "*.css"
   ],
-  "homepage": "https://github.com/igordanchenko/yet-another-react-lightbox-lite",
+  "homepage": "https://github.com/amalitsky/yet-another-react-lightbox-lite",
   "repository": {
     "type": "git",
-    "url": "https://github.com/igordanchenko/yet-another-react-lightbox-lite.git"
+    "url": "https://github.com/amalitsky/yet-another-react-lightbox-lite.git"
   },
   "bugs": {
-    "url": "https://github.com/igordanchenko/yet-another-react-lightbox-lite/issues"
+    "url": "https://github.com/amalitsky/yet-another-react-lightbox-lite/issues"
   },
   "engines": {
     "node": ">=18"

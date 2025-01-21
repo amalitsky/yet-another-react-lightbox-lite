@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
-    if: github.repository == 'igordanchenko/yet-another-react-lightbox-lite'
+    if: github.repository == 'amalitsky/yet-another-react-lightbox-lite'
 
     permissions:
       contents: write
