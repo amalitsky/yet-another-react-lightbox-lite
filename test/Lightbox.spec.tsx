@@ -213,12 +213,12 @@ describe("Lightbox", () => {
 
   it("supports view transitions", () => {
     document.startViewTransition = (callback) => {
-      callback();
+      callback?.();
 
       return {
-        ready: Promise.resolve(),
-        finished: Promise.resolve(),
-        updateCallbackDone: Promise.resolve(),
+        ready: Promise.resolve(undefined),
+        finished: Promise.resolve(undefined),
+        updateCallbackDone: Promise.resolve(undefined),
         skipTransition() {},
       };
     };
@@ -232,7 +232,7 @@ describe("Lightbox", () => {
     clickButtonPrev();
     expectCurrentSlideToBe(0);
 
-    // @ts-ignore
+    // @ts-expect-error - expected error
     document.startViewTransition = undefined;
   });
 
@@ -266,6 +266,7 @@ describe("Lightbox", () => {
     renderLightbox({
       toolbar: {
         buttons: [
+          // eslint-disable-next-line react/jsx-key
           <button type="button" className="custom_toolbar_button1">
             Button 1
           </button>,
@@ -354,6 +355,12 @@ describe("Lightbox", () => {
     await user.keyboard("{Meta>}_{/Meta}");
     expectToBeZoomedOut();
 
+    await user.keyboard("{Control>}={/Control}");
+    expectToBeZoomedIn();
+
+    await user.keyboard("{Control>}_{/Control}");
+    expectToBeZoomedOut();
+
     await user.keyboard("+++");
     expectToBeZoomedIn();
 
@@ -401,7 +408,6 @@ describe("Lightbox", () => {
     expectToBeZoomedIn();
 
     for (let i = 0; i < 3; i += 1) {
-      // eslint-disable-next-line no-await-in-loop
       await user.dblClick(getController());
     }
     expectToBeZoomedOut();

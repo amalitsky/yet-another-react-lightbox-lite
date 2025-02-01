@@ -24,7 +24,7 @@ export default function useSensors() {
   const wheelCooldownMomentum = useRef<number | null>(null);
 
   const activePointers = useRef<PointerEvent[]>([]);
-  const pinchZoomDistance = useRef<number>();
+  const pinchZoomDistance = useRef<number>(undefined);
 
   const { zoom, maxZoom, changeZoom, changeOffsets } = useZoom();
   const { carouselRef } = useZoomInternal();
@@ -39,7 +39,8 @@ export default function useSensors() {
 
   return useMemo(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      const meta = event.getModifierState("Meta");
+      const { key, metaKey, ctrlKey } = event;
+      const meta = metaKey || ctrlKey;
 
       const preventDefault = () => event.preventDefault();
 
@@ -48,11 +49,11 @@ export default function useSensors() {
         changeZoom(newZoom);
       };
 
-      if (event.key === "+" || (meta && event.key === "=")) handleChangeZoom(zoom * KEYBOARD_ZOOM_FACTOR);
-      if (event.key === "-" || (meta && event.key === "_")) handleChangeZoom(zoom / KEYBOARD_ZOOM_FACTOR);
-      if (meta && event.key === "0") handleChangeZoom(1);
+      if (key === "+" || (meta && key === "=")) handleChangeZoom(zoom * KEYBOARD_ZOOM_FACTOR);
+      if (key === "-" || (meta && key === "_")) handleChangeZoom(zoom / KEYBOARD_ZOOM_FACTOR);
+      if (meta && key === "0") handleChangeZoom(1);
 
-      if (event.key === "Escape") close();
+      if (key === "Escape") close();
 
       if (zoom > 1) {
         const move = (deltaX: number, deltaY: number) => {
@@ -60,16 +61,16 @@ export default function useSensors() {
           changeOffsets(deltaX, deltaY);
         };
 
-        if (event.key === "ArrowUp") move(0, KEYBOARD_MOVE_DISTANCE);
-        if (event.key === "ArrowDown") move(0, -KEYBOARD_MOVE_DISTANCE);
-        if (event.key === "ArrowLeft") move(KEYBOARD_MOVE_DISTANCE, 0);
-        if (event.key === "ArrowRight") move(-KEYBOARD_MOVE_DISTANCE, 0);
+        if (key === "ArrowUp") move(0, KEYBOARD_MOVE_DISTANCE);
+        if (key === "ArrowDown") move(0, -KEYBOARD_MOVE_DISTANCE);
+        if (key === "ArrowLeft") move(KEYBOARD_MOVE_DISTANCE, 0);
+        if (key === "ArrowRight") move(-KEYBOARD_MOVE_DISTANCE, 0);
 
         return;
       }
 
-      if (event.key === "ArrowLeft") prev();
-      if (event.key === "ArrowRight") next();
+      if (key === "ArrowLeft") prev();
+      if (key === "ArrowRight") next();
     };
 
     const removePointer = (event: PointerEvent) => {
@@ -87,11 +88,15 @@ export default function useSensors() {
       if (
         // ignore right button clicks (e.g., context menu)
         (event.pointerType === "mouse" && event.buttons > 1) ||
-        // ignore clicks on navigation buttons, toolbar, etc.
+        // ignore clicks on navigation buttons, toolbar, user-selectable elements, etc.
         (event.target instanceof Element &&
           (event.target.classList.contains(cssClass("button")) ||
             event.target.classList.contains(cssClass("icon")) ||
-            carouselRef.current?.parentElement?.querySelector(`.${cssClass("toolbar")}`)?.contains(event.target)))
+            Array.from(
+              carouselRef.current?.parentElement?.querySelectorAll(
+                `.${cssClass("toolbar")}, .${cssClass("selectable")}`,
+              ) /* c8 ignore start */ || [] /* c8 ignore stop */,
+            ).find((element) => element.contains(event.target as Element))))
       ) {
         return;
       }

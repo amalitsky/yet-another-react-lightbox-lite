@@ -192,7 +192,7 @@ A callback to update current slide index state. This prop is required.
 
 ### labels
 
-Type: `{ [key: string]: string }`
+Type: `keyof Labels`
 
 Custom UI labels / translations.
 
@@ -565,6 +565,14 @@ fixed-positioned elements to keep them in place. Please note that the
 fixed-positioned element container should not have its own border or padding
 styles. If that's the case, you can always add an extra wrapper that just
 defines the fixed position without visual styles.
+
+## Text Selection
+
+The lightbox is rendered with the `user-select: none` CSS style. If you'd like
+to make some of your custom elements user-selectable, use the
+`yarll__selectable` CSS class. This class sets the `user-select: text` style and
+turns off click-and-drag slide navigation, likely interfering with text
+selection UX.
 
 ## Hooks (experimental)
 
